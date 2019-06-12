@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/bootstrap/bootstrap3/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap/bootstrap-table/bootstrap-table.css">
+    <link rel="stylesheet" href="/bootstrap/bootstrap-fileinput/css/fileinput.css">
+    <script src="/bootstrap/easyui1.5/jquery.min.js"></script>
+    <script src="/bootstrap/bootstrap3/js/bootstrap.js"></script>
+    <script src="/bootstrap/bootstrap-table/bootstrap-table.js"></script>
+
+    <script src="/bootstrap/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="/bootstrap/bootbox/bootbox.all.min.js"></script>
+    <script src="/bootstrap/bootstrap-fileinput/js/fileinput.js"></script>
+    <script src="/bootstrap/bootstrap-fileinput/js/locales/zh.js"></script>
+    <script src="/bootstrap/jquery.form.js"></script>
+
+
+
+
+
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" id="poiForm">
+    <table>
+        <tr>
+            <td><input type="file" name="upfile" id="upfile"></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" class="btn btn-primary" onclick="return checkData()" name="btn" ></td>
+            <td><input type="submit" value="导入Excel到mysql" id="btn" name="btn" class="btn btn-primary"></td>
+        </tr>
+    </table>
+</form>
+<button id="exportBtn"  class="export-excel btn btn-default" data-table="#countTable">全选</button>
+<button class="btn btn-info"  onclick="exportExcel()">导出excel表格</button>
+<div class="container-fluid" id="treeTable"></div>
+
+
+</body>
+<script type="text/javascript">
+
+
+    $("#treeTable").bootstrapTable({
+        url: '/findTreeList',
+        method: 'post',
+        contentType: 'application/x-www-form-urlencoded',//post请求按照表单方式
+        columns: [
+            {field : 'id',title : '主键ID',formatter : function(value,row,index) {
+                    return '<input type="checkbox" value=' + value + ' name="chk">';
+                } },
+            {field: 'text', title: 'text'},
+            {field: 'url', title: 'url'},
+            { field: 'pid', title: 'PID'}
+        ]
+    })
+
+
+    //全选
+    $("#exportBtn").click(function(){
+
+        $("[name='chk']").prop("checked",true);
+    })
+    //导出
+    function  exportExcel(){
+        var chk=$("[name='chk']:checked");
+        var ids="";
+        for (var i=0;i<chk.length;i++){
+            ids+=ids==""?chk[i].value:","+chk[i].value;
+
+        alert(ids);
+    if(ids!=""){
+        location.href="/exportPoi?ids="+ids;
+    }else{
+        alert("请选择要导出的数据");
+    }
+    }
+    //导入
+
+    $("#btn").click(function(){
+        alert(111);
+        $("#poiForm").ajaxSubmit({
+            url: "/enterPoi",
+            dataType: 'text',
+            success: function (data) {
+                $("#upfile").val("");
+                if(data){
+                    alert("成功导入Excel文件！")
+                }else{
+                    alert("导入Excel文件出错！")
+                }
+            },
+            error: function () {
+                alert("导入Excel文件出错！")
+            }
+        })
+
+    })
+</script>
+</html>

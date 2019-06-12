@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.dao.TreeMapper">
+  <!--新增-->
+    <insert id="savePoi" parameterType="com.jk.bean.Tree">
+        insert into  tt_tree(text,url,pid) values
+      <foreach collection="list" separator="," index="index" item="item">
+          (#{item.text},#{item.url},#{item.pid})
+      </foreach>
+    </insert>
+
+
+    <!--查询-->
+    <select id="findTreeListByIds" parameterType="String" resultType="com.jk.bean.Tree">
+     select * from t_tree where id in
+     <foreach collection="array" item="item" index="index" separator="," close=")" open="(">
+        #{item}
+     </foreach>
+    </select>
+
+</mapper>
