@@ -30,7 +30,7 @@ public class TreeController {
     private TreeService treeService;
     @RequestMapping("main")
     public String main() {
-        System.out.println("到主页面1");
+        System.out.println("到主页面3");
         return "main";
     }
     /**
